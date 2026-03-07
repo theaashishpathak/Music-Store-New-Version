@@ -2,13 +2,21 @@
 
 A production-grade React music discovery app powered by the **iTunes Search API**. Browse songs by genre, search any artist or track, play 30-second previews, and save your favourites — all with a clean dark UI.
 
-**Live Demo →** `[your-deployment-url-here]`
+**Live Demo →** [music-store-free-itunes.netlify.app](https://music-store-free-itunes.netlify.app/)
+
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)
+![React Router](https://img.shields.io/badge/React_Router-v6-CA4245?style=flat&logo=react-router)
+![Axios](https://img.shields.io/badge/Axios-1.7-5A29E4?style=flat&logo=axios)
+![Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=flat&logo=netlify)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
 ---
 
 ## 📸 Screenshots
 
-> _Add screenshots after deployment — search page, player page, favourites tab_
+| Home Page | Search Results | Favourites |
+|---|---|---|
+| ![Main Page](public/music-store-search.png) | ![Search](public/music-store-search-functionality.png) | ![Favourites](public/music-store-favourites.png) |
 
 ---
 
@@ -16,29 +24,30 @@ A production-grade React music discovery app powered by the **iTunes Search API*
 
 - 🔍 **Search** — Search songs or artists via the iTunes API
 - 🎛️ **Genre Tabs** — Filter by Latest, Pop, Rock, Hip-Hop, Jazz, Electronic, Bollywood, Classical, R&B
-- 🎵 **30-Second Previews** — Play audio directly in the app with a custom progress bar + seek
-- ♥ **Favourites** — Heart songs and view them in a dedicated tab (persisted to localStorage)
-- 📄 **Pagination** — Load 20 songs at a time, click "Load More" for the next batch
-- 💀 **Skeleton Loading** — Shimmer placeholder cards while fetching
-- ⚠️ **Error Handling** — Graceful error message if the API call fails
+- 🎵 **30-Second Previews** — Play audio with a custom progress bar, seek, and play/pause controls
+- ♥ **Favourites** — Heart songs and view them in a dedicated tab (persisted to `localStorage`)
+- 📄 **Pagination** — Loads 20 songs at a time with a "Load More" button
+- 💀 **Skeleton Loading** — Shimmer placeholder cards during API fetch
+- ⚠️ **Error Handling** — Graceful error state if the API call fails
 - 📱 **Responsive** — Works on mobile, tablet, and desktop
-- 🔗 **React Router** — `/search` and `/player` routes with browser back support
+- 🔗 **React Router** — `/search` and `/player` routes with full browser back/forward support
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer        | Technology                                  |
-| ------------ | ------------------------------------------- |
-| UI Framework | React 18                                    |
-| Routing      | React Router v6                             |
-| HTTP Client  | Axios                                       |
-| Data Source  | iTunes Search API (Apple)                   |
-| Styling      | Custom CSS with CSS Variables               |
-| Fonts        | Google Fonts — Syne + DM Sans               |
-| State        | React hooks (useState, useRef, useCallback) |
-| Persistence  | localStorage via custom hook                |
-| Build Tool   | Create React App (react-scripts 5)          |
+| Layer | Technology |
+|---|---|
+| UI Framework | React 18 |
+| Routing | React Router v6 |
+| HTTP Client | Axios |
+| Data Source | iTunes Search API (Apple — no key required) |
+| Styling | Custom CSS with CSS Variables + Google Fonts |
+| Fonts | Syne (headings) + DM Sans (body) |
+| State | useState, useRef, useCallback |
+| Persistence | localStorage via custom `useFavorites` hook |
+| Build Tool | Create React App (react-scripts 5) |
+| Deployment | Netlify |
 
 ---
 
@@ -46,8 +55,8 @@ A production-grade React music discovery app powered by the **iTunes Search API*
 
 ```
 src/
-├── index.js                 # Entry point — ReactDOM, BrowserRouter
-├── App.js                   # Route definitions
+├── index.js                 # Entry point — ReactDOM.createRoot, BrowserRouter
+├── App.js                   # Route definitions (/search, /player)
 ├── index.css                # Design system — CSS variables, grid, animations
 │
 ├── pages/
@@ -55,19 +64,19 @@ src/
 │   └── PlayerPage.jsx       # Player route — reads router state, renders Player
 │
 ├── components/
-│   ├── Search.jsx           # Search input with Enter key support
-│   ├── GenreTabs.jsx        # Genre filter tabs (data-driven config array)
-│   ├── Songs.jsx            # Responsive song card grid with empty state
-│   ├── Song.jsx             # Individual card — artwork, info, play + fav buttons
+│   ├── Search.jsx           # Uncontrolled search input with Enter key support
+│   ├── GenreTabs.jsx        # Data-driven genre filter tabs
+│   ├── Songs.jsx            # Responsive song grid with empty state handler
+│   ├── Song.jsx             # Individual card — artwork, play button, fav button
 │   ├── SkeletonCard.jsx     # Shimmer loading placeholder
 │   └── Player.jsx           # Audio player — progress bar, seek, play/pause
 │
 ├── hooks/
-│   ├── useSongs.js          # Fetch + loading + error + pagination logic
-│   └── useFavorites.js      # localStorage favourites persistence
+│   ├── useSongs.js          # Fetch + loading + error + pagination (useCallback, useRef)
+│   └── useFavorites.js      # localStorage persistence (lazy init + useEffect sync)
 │
 └── services/
-    └── api-client.js        # iTunes API call (isolated service layer)
+    └── api-client.js        # Axios call to iTunes API — isolated service layer
 ```
 
 ---
@@ -83,7 +92,7 @@ src/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/Music-Store-New-Version.git
+git clone https://github.com/AashishPathak1/Music-Store-New-Version.git
 
 # 2. Navigate into the project
 cd Music-Store-New-Version
@@ -91,101 +100,132 @@ cd Music-Store-New-Version
 # 3. Install dependencies
 npm install
 
-# 4. Install React Router (if not already in package.json)
-npm install react-router-dom
-
-# 5. Start the development server
+# 4. Start the development server
 npm start
 ```
 
-App runs at **http://localhost:3000**
+App runs at **http://localhost:3000** and opens automatically in your browser.
+
+---
+
+## 🌐 Deployment
+
+This project is deployed on **Netlify**. The `public/_redirects` file handles React Router's client-side routing:
+
+```
+/*    /index.html    200
+```
+
+> Without this file, refreshing `/player` or `/search` returns a 404 because Netlify tries to find a real file at that path instead of serving `index.html` and letting React Router handle it.
+
+### Deploy your own fork
+
+```bash
+# Build
+npm run build
+
+# Option A — Netlify CLI
+npm install -g netlify-cli
+netlify deploy --prod --dir=build
+
+# Option B — Drag and drop the build/ folder at netlify.com/drop
+
+# Option C — Vercel (also free, zero config)
+npm install -g vercel
+vercel
+```
+
+> If deploying to **Vercel**, create a `vercel.json` in the project root instead of `_redirects`:
+> ```json
+> { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+> ```
 
 ---
 
 ## 🔑 Environment Variables
 
-This project uses the **public iTunes Search API** — no API key is required. No `.env` file is needed.
+This project uses the **public iTunes Search API** — no API key or `.env` file is required.
 
-If you switch to the Spotify API in the future, you will need:
+If you integrate the Spotify API in the future:
 
 ```env
 REACT_APP_SPOTIFY_CLIENT_ID=your_client_id
 REACT_APP_SPOTIFY_CLIENT_SECRET=your_client_secret
 ```
 
-> In Create React App, all environment variables must be prefixed with `REACT_APP_` to be accessible in the browser.
+> In Create React App, all env variables must be prefixed with `REACT_APP_` to be accessible in the browser bundle.
 
 ---
 
 ## 🗺️ Roadmap — Future Enhancements
 
-### 🔥 High Impact (Do These Next)
+### 🔥 High Impact (Next Steps)
 
-| Feature                   | Why                                                     | How                                                                                    |
-| ------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| **Debounced live search** | Fire API call 500ms after user stops typing — better UX | Create `useDebounce.js` hook, switch Search to controlled input                        |
-| **React Query / SWR**     | Automatic caching, background refetch, deduplication    | Replace `useSongs` fetch logic with `useQuery` from `@tanstack/react-query`            |
-| **Auto-play next song**   | Keep users engaged after 30s preview ends               | In Player's `onEnded`, call a `onNext` prop that advances to the next song in the list |
-| **Keyboard shortcuts**    | Space = play/pause, arrows = seek                       | `useEffect` with `window.addEventListener('keydown', ...)` in Player                   |
+| Feature | Why | How |
+|---|---|---|
+| **Debounced live search** | Fire API 500ms after typing stops — no button needed | `useDebounce` hook, switch Search to controlled input |
+| **Mini player bar** | Keep playing while browsing — like Spotify | Fixed bottom bar, lift `currentSong` to App level |
+| **Auto-play next song** | Keep users engaged after 30s preview ends | Call `onNext` prop in Player's `onEnded` handler |
+| **React Query** | Caching, background refetch, deduplication | Replace `useSongs` with `useQuery` from `@tanstack/react-query` |
 
-### 🎨 UI / UX Improvements
+### 🎨 UI / UX
 
-| Feature                       | Why                                            | How                                                                  |
-| ----------------------------- | ---------------------------------------------- | -------------------------------------------------------------------- |
-| **Mini player bar**           | Continue playing while browsing — like Spotify | Fixed bottom bar component, lift `currentSong` state to App level    |
-| **Sort songs**                | Sort by artist name, relevance, or track name  | `.sort()` on the songs array before passing to Songs component       |
-| **Dark / Light mode toggle**  | Accessibility + preference                     | CSS variable swap via a class on `<body>`, persisted to localStorage |
-| **Animated page transitions** | Polished feel                                  | `framer-motion` `<AnimatePresence>` wrapping Routes                  |
-| **Share button on Player**    | Virality                                       | Web Share API: `navigator.share({ title, url })`                     |
+| Feature | Why | How |
+|---|---|---|
+| **Dark / Light mode** | Accessibility + user preference | CSS variable swap via `<body>` class, persisted to localStorage |
+| **Animated page transitions** | Polished, app-like feel | `framer-motion` `<AnimatePresence>` around `<Routes>` |
+| **Sort songs** | Sort by artist, name, or relevance | `.sort()` on songs array before rendering |
+| **Share button on Player** | Easy sharing | Web Share API: `navigator.share({ title, url })` |
 
 ### ⚡ Performance
 
-| Feature                       | Why                                | How                                                               |
-| ----------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
-| **List virtualisation**       | Handle 500 cards smoothly          | `react-window` `FixedSizeGrid` — only renders visible cards       |
-| **Image lazy loading**        | Faster initial paint               | `<img loading="lazy" />` — native browser attribute, zero JS      |
-| **AbortController in search** | Prevent stale data race conditions | Cancel previous fetch before starting a new one                   |
-| **React.memo on Song card**   | Skip re-rendering unchanged cards  | `export const Song = React.memo(({ song, isFav, onFav }) => ...)` |
+| Feature | Why | How |
+|---|---|---|
+| **Image lazy loading** | Faster initial paint | `<img loading="lazy" />` — native, zero JS cost |
+| **React.memo on Song card** | Prevent unnecessary re-renders | `export const Song = React.memo(...)` |
+| **AbortController in search** | Prevent race conditions on fast typing | Cancel in-flight request before starting new one |
+| **List virtualisation** | Smooth rendering of 500 cards | `react-window` `FixedSizeGrid` |
 
 ### 🔐 Backend & Auth (Advanced)
 
-| Feature                     | Why                                              | How                                                               |
-| --------------------------- | ------------------------------------------------ | ----------------------------------------------------------------- |
-| **Node.js proxy server**    | Hide API keys, add rate limiting, enable caching | Express server with `/api/search` endpoint, deploy on Railway     |
-| **User authentication**     | Personal playlists that sync across devices      | Firebase Auth or Clerk — Google/GitHub sign-in                    |
-| **Cloud-synced favourites** | Favourites survive across devices and browsers   | Replace localStorage with Firestore or Supabase — store by userId |
-| **Playlist creation**       | Core music app feature                           | New `usePlaylists` hook, playlist management page                 |
-| **Spotify API integration** | Full-length songs instead of 30s previews        | OAuth 2.0 flow, swap iTunes previewUrl for Spotify track URI      |
+| Feature | Why | How |
+|---|---|---|
+| **User authentication** | Personal data across devices | Firebase Auth or Clerk (Google/GitHub sign-in) |
+| **Cloud-synced favourites** | Survive across devices and browsers | Replace localStorage with Firestore or Supabase |
+| **Playlist creation** | Core music app feature | `usePlaylists` hook + playlist management page |
+| **Spotify API** | Full-length songs instead of 30s previews | OAuth 2.0 PKCE flow, swap `previewUrl` for Spotify URI |
+| **Node.js proxy** | Rate limiting, caching, API key protection | Express `/api/search`, deploy on Railway |
 
 ### 🧪 Testing
 
-| Test Type       | Tool                      | What to Test                                         |
-| --------------- | ------------------------- | ---------------------------------------------------- |
-| Unit tests      | Jest                      | `useSongs`, `useFavorites` hook logic                |
-| Component tests | React Testing Library     | Song card renders, fav button toggles                |
-| API mocking     | MSW (Mock Service Worker) | Mock iTunes API responses without real network calls |
-| E2E tests       | Playwright or Cypress     | Search flow, navigate to player, play audio          |
+| Type | Tool | What to Test |
+|---|---|---|
+| Unit | Jest | `useSongs`, `useFavorites` hook logic |
+| Component | React Testing Library | Song card render, fav toggle, skeleton display |
+| API mock | MSW (Mock Service Worker) | Simulate iTunes responses without real network |
+| E2E | Playwright or Cypress | Search → play → favourite full user flow |
 
 ---
 
 ## 🐛 Known Issues
 
-| Issue                          | Cause                                                    | Fix                                                        |
-| ------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------- |
-| Audio play error on first load | Browser autoplay policy + React StrictMode double-invoke | Fixed via `await play()` + `onCanPlay` ready guard         |
-| Songs repeat between searches  | iTunes API returns overlapping results                   | Deduplicate by `trackId` after fetch                       |
-| Empty card (no artwork)        | Some iTunes results have no artwork URL                  | Add fallback: `song.artworkUrl100 \|\| '/placeholder.png'` |
+| Issue | Cause | Status |
+|---|---|---|
+| Audio `play()` AbortError on first load | Browser autoplay policy + React StrictMode | ✅ Fixed — `await play()` + `onCanPlay` ready guard |
+| Songs can repeat across searches | iTunes API returns overlapping results | 🔧 Can deduplicate by `trackId` after fetch |
+| Missing artwork on some cards | Some iTunes results have no `artworkUrl100` | 🔧 Add fallback image: `song.artworkUrl100 \|\| '/placeholder.png'` |
 
 ---
 
 ## 💡 What I Learned Building This
 
 - **Custom hooks** separate data concerns from UI — `useSongs` and `useFavorites` are independently reusable and testable
-- **React Router state** is the right way to pass complex objects between routes without URL encoding
-- **Browser media APIs** (HTMLAudioElement) are imperative — `useRef` is the correct React pattern for integrating with them
-- **`"type": "module"`** in package.json enforces strict ESM — all imports must include the file extension
-- **CSS custom properties** are the foundation of any scalable design system — changing one variable propagates everywhere
-- **Skeleton screens** are measurably better UX than spinners — they preserve layout and reduce perceived load time
+- **React Router state** is the correct way to pass complex objects between routes without URL-encoding them
+- **Browser media APIs** (HTMLAudioElement) are imperative — `useRef` is the right pattern for integrating with them, not `useState`
+- **`"type": "module"`** in `package.json` enforces strict ESM — every import must include the full file extension (`.js`, `.jsx`)
+- **CSS custom properties** are the foundation of a scalable design system — one variable change propagates to every element that uses it
+- **Skeleton screens** reduce perceived load time — they preserve spatial layout so content doesn't cause a jarring layout shift when it arrives
+- **`await audio.play()`** — the browser's play() returns a Promise; not awaiting it was the root cause of the AbortError crash
 
 ---
 
@@ -202,9 +242,12 @@ MIT — free to use, modify, and distribute.
 - [React Router](https://reactrouter.com/) — Client-side routing
 - [Axios](https://axios-http.com/) — HTTP client
 - [Google Fonts](https://fonts.google.com/) — Syne & DM Sans typefaces
+- [Netlify](https://netlify.com/) — Deployment platform
 
 ---
 
 <div align="center">
-  Made with ♥ by <strong>Aashish Pathak</strong>
+  <strong>Made with ♥ by Aashish Pathak</strong><br/>
+  <a href="https://music-store-free-itunes.netlify.app/">Live Demo</a> •
+  <a href="https://github.com/AashishPathak1/Music-Store-New-Version">GitHub</a>
 </div>
