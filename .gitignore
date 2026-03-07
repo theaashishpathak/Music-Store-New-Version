@@ -1,3 +1,13 @@
-/trash.txt
-/node_modules
-/build
+# dependencies — never commit these
+node_modules/
+
+# production build — Netlify builds this automatically
+build/
+
+# misc
+.DS_Store
+Thumbs.db
+npm-debug.log*
+.env
+.env.local
+trash.txt
