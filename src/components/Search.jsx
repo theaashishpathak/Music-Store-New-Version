@@ -1,30 +1,29 @@
-// Your code looks good, but I've made a few minor adjustments for clarity and best practices:
-
-// jsx
 import { useRef } from "react";
 
 export const Search = ({ fn }) => {
-  const artistRef = useRef(); // Changed variable name to artistRef for clarity
+  const inputRef = useRef();
+
+  const handleSearch = () => {
+    const val = inputRef.current.value.trim();
+    if (val) fn(val);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
 
   return (
-    <>
-      <center className="search">
-      <label>Artist Name</label>
-        <input
-          ref={artistRef}
-          type="text"
-          className="form-control"
-          placeholder="Search Artist Wise Song"
-        />
-        <button
-          className="btn btn-success"
-          onClick={() => {
-            fn(artistRef.current.value.trim()); // Added trim() to remove whitespace
-          }}
-        >
-          Search It
-        </button>
-      </center>
-    </>
+    <div className="search-wrap">
+      <input
+        ref={inputRef}
+        type="text"
+        className="search-input"
+        placeholder="Search artist or song..."
+        onKeyDown={handleKeyDown}
+      />
+      <button className="search-btn" onClick={handleSearch}>
+        Search
+      </button>
+    </div>
   );
 };

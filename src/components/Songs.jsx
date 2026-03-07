@@ -1,16 +1,26 @@
-import { Song } from "./Song";
+import { Song } from "./Song.jsx";
 
-export const Songs = ({ fn, allsongs }) => {
-  console.log("*******All Songs ", allsongs);
-  // map (JS)
-  // allsongs (data) ---> convert --> JSX
-  return (
-    <>
-      <div className="SongListDisplay">
-      {allsongs.map((currentSong, index) => (
-        <Song key={index} fn={fn} song={currentSong} />
-      ))}
+export const Songs = ({ allsongs, isFav, onFav, emptyMessage }) => {
+  // Empty state
+  if (allsongs.length === 0) {
+    return (
+      <div className="song-grid">
+        <div className="empty-state">
+          <div className="empty-icon">♪</div>
+          <p className="empty-title">No songs here yet</p>
+          <p className="empty-sub">
+            {emptyMessage || "Search for an artist or pick a genre above"}
+          </p>
+        </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="song-grid">
+      {allsongs.map((song) => (
+        <Song key={song.trackId} song={song} isFav={isFav} onFav={onFav} />
+      ))}
+    </div>
   );
 };

@@ -1,75 +1,50 @@
-// import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// export const Song = ({ fn, song }) => {
-//   console.log(song);
-//   const [playerFlag, setPlayerFlag] = useState(false);
+export const Song = ({ song, isFav, onFav }) => {
+  const navigate = useNavigate();
 
-//   const showPlayer = () => {
-//     setPlayerFlag(true); // Set playerFlag to true when showPlayer is called
-//     fn(true, song);
-//   };
+  const goToPlayer = () => navigate("/player", { state: { song } });
 
-//   return (
-//     <div className="row">
-//       <div className="col-4">
-//         <img src={song.artworkUrl100} alt={song.trackName} />
-//       </div>
-//       <div className="col-4">
-//         {song.artistName} {song.trackName}
-//       </div>
-//       <div className="col-4">
-//         <button onClick={showPlayer} className="btn btn-primary">
-//           Play Song
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// import { useState } from "react";
-
-// export const Song = ({ fn, song }) => {
-//   console.log(song);
-
-//   const showPlayer = () => {
-//     fn(true, song);
-//   };
-
-//   return (
-//     <div className="row">
-//       <div className="col-4">
-//         <img src={song.artworkUrl100} alt={song.trackName} />
-//       </div>
-//       <div className="col-4">
-//         {song.artistName} - {song.trackName}
-//       </div>
-//       <div className="col-4">
-//         <button onClick={showPlayer} className="btn btn-primary">
-//           Play Song
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-import { useState } from "react";
-
-export const Song = ({ fn, song }) => {
-  console.log(song);
-  const [playerFlag, setPlayerFlag] = useState(false);
-  const showPlayer = () => {
-    fn(true, song);
-  };
   return (
     <div className="card">
-        <img src={song.artworkUrl100} />
-      <div className="col-4">
-        {song.artistName} {song.trackName}
+      {/* Album art + hover overlay */}
+      <div className="card-img-wrap">
+        <img
+          src={song.artworkUrl100}
+          alt={`${song.trackName} by ${song.artistName}`}
+        />
+        <div className="card-overlay">
+          <button className="overlay-play-btn" onClick={goToPlayer}>
+            ▶
+          </button>
+        </div>
       </div>
-      <div className="">
-        <button onClick={showPlayer} className="btn btn-primary">
-          Play Song
-        </button>
+
+      {/* Text info */}
+      <div className="card-body">
+        <p className="card-artist">{song.artistName}</p>
+        <p className="card-title">{song.trackName}</p>
+
+        {/* Actions row */}
+        <div className="card-actions">
+          <button className="card-play-btn" onClick={goToPlayer}>
+            ▶ Play
+          </button>
+          <button
+            className={`fav-btn ${isFav(song.trackId) ? "active" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onFav(song);
+            }}
+            title={
+              isFav(song.trackId)
+                ? "Remove from favourites"
+                : "Add to favourites"
+            }
+          >
+            {isFav(song.trackId) ? "♥" : "♡"}
+          </button>
+        </div>
       </div>
     </div>
   );
