@@ -34,6 +34,8 @@ body {
   font-weight: 400;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
 /* subtle grid texture */
@@ -113,6 +115,7 @@ body::before {
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 .nav-tab:hover {
   color: var(--text);
@@ -181,6 +184,8 @@ body::before {
   color: var(--text);
   font-family: "DM Sans", sans-serif;
   font-size: 0.95rem;
+  /* Prevent zoom on iOS when font-size < 16px */
+  font-size: max(16px, 0.95rem);
 }
 .search-input::placeholder {
   color: var(--text-muted);
@@ -200,6 +205,8 @@ body::before {
   transition:
     background 0.2s,
     transform 0.1s;
+  /* Make tap target large enough on mobile */
+  min-height: 40px;
 }
 .search-btn:hover {
   background: #1ed760;
@@ -214,6 +221,8 @@ body::before {
   padding-bottom: 4px;
   margin-bottom: 28px;
   scrollbar-width: none;
+  /* Smooth momentum scroll on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 .genre-tabs::-webkit-scrollbar {
   display: none;
@@ -232,6 +241,8 @@ body::before {
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  /* Tap target */
+  min-height: 38px;
 }
 .genre-tab:hover {
   border-color: var(--accent);
@@ -266,6 +277,7 @@ body::before {
 /* ── SONG GRID ───────────────────────────────────────────── */
 .song-grid {
   display: grid;
+  /* Desktop: as many ~175px cols as fit */
   grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
   gap: 16px;
 }
@@ -306,7 +318,7 @@ body::before {
   transform: scale(1.07);
 }
 
-/* play overlay on hover */
+/* play overlay — hidden on touch devices (no hover) */
 .card-overlay {
   position: absolute;
   inset: 0;
@@ -380,14 +392,16 @@ body::before {
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.2s;
+  /* Tap target */
+  min-height: 36px;
 }
 .card-play-btn:hover {
   background: #1ed760;
 }
 
 .fav-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--bg-glass);
@@ -452,7 +466,7 @@ body::before {
   width: 88%;
 }
 
-/* ── FAVOURITES EMPTY STATE ──────────────────────────────── */
+/* ── EMPTY STATE ──────────────────────────────────────────── */
 .empty-state {
   grid-column: 1 / -1;
   display: flex;
@@ -474,6 +488,7 @@ body::before {
 }
 .empty-sub {
   font-size: 0.85rem;
+  text-align: center;
 }
 
 /* ── LOAD MORE ───────────────────────────────────────────── */
@@ -494,6 +509,7 @@ body::before {
   cursor: pointer;
   transition: all 0.2s;
   letter-spacing: 0.3px;
+  min-height: 44px;
 }
 .load-more-btn:hover {
   background: var(--accent);
@@ -519,7 +535,6 @@ body::before {
   position: relative;
 }
 
-/* blurred album art background */
 .player-bg {
   position: fixed;
   inset: 0;
@@ -543,6 +558,7 @@ body::before {
   cursor: pointer;
   transition: all 0.2s;
   margin-bottom: 40px;
+  min-height: 40px;
 }
 .player-back-btn:hover {
   color: var(--text);
@@ -616,6 +632,7 @@ body::before {
 }
 .progress-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
+  /* Larger thumb on mobile for easier scrubbing */
   width: 14px;
   height: 14px;
   background: var(--accent);
@@ -663,4 +680,318 @@ body::before {
   font-size: 0.72rem;
   color: var(--text-muted);
   margin-top: 14px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   • Mobile:  < 480px
+   • Phablet: 480px – 639px
+   • Tablet:  640px – 1023px
+   • Desktop: 1024px+  (base styles above)
+══════════════════════════════════════════════════════════ */
+
+/* ── TABLET  (640px – 1023px) ───────────────────────────── */
+@media (max-width: 1023px) {
+  .container {
+    padding: 0 20px 48px;
+  }
+
+  .navbar {
+    padding: 14px 20px;
+  }
+
+  /* Slightly smaller card grid on tablet */
+  .song-grid {
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 14px;
+  }
+
+  .hero {
+    padding: 40px 0 24px;
+  }
+}
+
+/* ── PHABLET (480px – 639px) ────────────────────────────── */
+@media (max-width: 639px) {
+  .container {
+    padding: 0 16px 40px;
+  }
+
+  /* Navbar: shrink logo, shrink tab labels */
+  .navbar {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .nav-logo {
+    font-size: 1.15rem;
+  }
+  .nav-tab {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  /* Hide "Favourites" text, show just the heart + count */
+  .nav-tab .tab-text {
+    display: none;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 32px 0 20px;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+    letter-spacing: -1px;
+  }
+  .hero-sub {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  /* Search bar — full width, pill shape preserved */
+  .search-wrap {
+    margin: 0 0 28px;
+    max-width: 100%;
+    border-radius: 14px;
+  }
+  .search-input {
+    padding: 12px 16px;
+  }
+  .search-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    margin: 4px;
+  }
+
+  /* Genre tabs — smaller pills */
+  .genre-tab {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+  .genre-tabs {
+    margin-bottom: 20px;
+  }
+
+  /* Song grid — 2 columns on phablet */
+  .song-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Player — tighten padding */
+  .player-page {
+    padding: 20px 16px;
+  }
+  .player-back-btn {
+    margin-bottom: 24px;
+  }
+  .player-body {
+    padding: 18px;
+  }
+  .player-track {
+    font-size: 1.25rem;
+  }
+
+  /* Section label smaller */
+  .section-label {
+    font-size: 1rem;
+  }
+
+  /* Load more — full width on small screens */
+  .load-more-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── MOBILE  (< 480px) ───────────────────────────────────── */
+@media (max-width: 479px) {
+  .container {
+    padding: 0 12px 32px;
+  }
+
+  /* Navbar — tightest layout */
+  .navbar {
+    padding: 10px 12px;
+  }
+  .nav-logo {
+    font-size: 1rem;
+  }
+  .nav-tabs {
+    padding: 3px;
+    gap: 2px;
+  }
+  .nav-tab {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 24px 0 16px;
+  }
+  .hero-title {
+    font-size: clamp(1.6rem, 9vw, 2rem);
+    letter-spacing: -0.5px;
+  }
+
+  /* Search — stack vertically on very small screens */
+  .search-wrap {
+    flex-direction: column;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    overflow: visible;
+    border: 1px solid var(--border-hi);
+    padding: 8px;
+    gap: 8px;
+    background: var(--bg-card);
+  }
+  .search-input {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-hover);
+    width: 100%;
+  }
+  .search-btn {
+    width: 100%;
+    margin: 0;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Song grid — 2 columns, tighter */
+  .song-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  /* Card — smaller text on tiny screens */
+  .card-body {
+    padding: 8px 8px 8px;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+  .card-artist {
+    font-size: 0.65rem;
+  }
+  .card-play-btn {
+    font-size: 0.75rem;
+    padding: 6px 0;
+  }
+  .fav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  /* Genre tabs — even smaller */
+  .genre-tab {
+    padding: 5px 11px;
+    font-size: 0.75rem;
+  }
+
+  /* Player card — edge to edge on mobile */
+  .player-page {
+    padding: 16px 12px;
+  }
+  .player-card {
+    border-radius: 16px;
+    max-width: 100%;
+  }
+  .player-body {
+    padding: 16px;
+  }
+  .player-track {
+    font-size: 1.1rem;
+  }
+  .player-artist {
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+  /* Larger scrub thumb for finger tapping */
+  .progress-bar::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+  .play-btn {
+    padding: 13px;
+    font-size: 0.95rem;
+  }
+
+  /* Section label */
+  .section-label {
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 48px 16px;
+  }
+}
+
+/* ── TOUCH DEVICES — disable hover-only effects ─────────── */
+/* On touch screens there is no hover — always show the play
+   overlay so users can actually tap the button */
+@media (hover: none) and (pointer: coarse) {
+  .card-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.25);
+  }
+  .overlay-play-btn {
+    transform: scale(1);
+  }
+  /* Disable the card lift on touch (no hover state anyway) */
+  .card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .card:hover .card-img-wrap img {
+    transform: none;
+  }
+}
+
+/* ── LANDSCAPE PHONES ───────────────────────────────────── */
+@media (max-width: 767px) and (orientation: landscape) {
+  .hero {
+    padding: 16px 0 12px;
+  }
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  .hero-sub {
+    display: none;
+  }
+  /* 3 columns in landscape on phone */
+  .song-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  /* Player in landscape — side by side layout */
+  .player-page {
+    padding: 12px 16px;
+  }
+  .player-card {
+    display: flex;
+    max-width: 640px;
+    border-radius: 16px;
+  }
+  .player-artwork {
+    width: 180px;
+    aspect-ratio: auto;
+    min-height: 100%;
+    flex-shrink: 0;
+  }
+  .player-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
