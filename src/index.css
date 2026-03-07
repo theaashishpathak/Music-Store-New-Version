@@ -769,6 +769,7 @@ body::before {
     font-size: 0.8rem;
   }
   .genre-tabs {
+    display: block;
     margin-bottom: 20px;
   }
 
