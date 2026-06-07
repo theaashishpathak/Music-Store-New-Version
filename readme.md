@@ -2,7 +2,7 @@
 
 A production-grade React music discovery app powered by the **iTunes Search API**. Browse songs by genre, search any artist or track, play 30-second previews, and save your favourites — all with a clean dark UI.
 
-**Live Demo →** [music-store-free-itunes.netlify.app](https://music-store-free-itunes.netlify.app/)
+**Live Demo →** [music-store-free-itunes.netlify.app](https://aashish-music-store.netlify.app/)
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)
 ![React Router](https://img.shields.io/badge/React_Router-v6-CA4245?style=flat&logo=react-router)
